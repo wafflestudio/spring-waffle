@@ -8,6 +8,11 @@
 - ex) `안녕하세요! #team-ex 에서 truffle 을 이용하려고 해서, #team-ex-alert 채널에 연결되도록 프로젝트 하나 추가 요청드립니다!`
 
 ### spring 연동
+#### 프로퍼티 설정
+- 다음과 같은 spring 프로퍼티 생성
+    - `truffle.client.api-key: {api-key}`
+        - `{api-key}` 는 slack 트러플 채널(#project-truffle)에서 발급받은 key
+
 #### truffle-kotlin 연동
 - `build.gradle.kts` 혹은 `build.gradle` 파일에 아래와 같이 추가 (spring-boot-starter-waffle 추가 시 생략 가능)
     - build.gradle.kts
@@ -24,9 +29,6 @@
         implementation 'com.wafflestudio.spring.truffle:spring-boot-starter-truffle:1.0.0'
       }
       ```
-- 다음과 같은 spring 프로퍼티 생성
-    - `truffle.client.api-key: {api-key}`
-        - `{api-key}` 는 slack 트러플 채널(#project-truffle)에서 발급받은 key
 
 #### logback customize
 - 기존 설정은 에러 레벨의 root 로그만 트러플로 보내는 구조

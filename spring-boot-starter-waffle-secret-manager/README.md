@@ -11,6 +11,9 @@
     - value: `jdbc:postgresql://localhost:5432/test`
 
 ### spring 연동
+#### 프로퍼티 설정
+- 다음과 같은 spring 프로퍼티 생성
+    - `secret-names`: {aws-secret-manager-name}
 #### waffle-secret-manager 라이브러리 연동
 - `build.gradle.kts` 혹은 `build.gradle` 파일에 아래와 같이 추가 (spring-boot-starter-waffle 추가 시 생략 가능)
     - build.gradle.kts
@@ -27,5 +30,3 @@
         implementation 'com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.0'
       }
       ```
-- 다음과 같은 spring 프로퍼티 생성
-  - `secret-names`: {aws-secret-manager-name}
