@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+    <springProperty name="TRUFFLE_API_KEY" source="truffle.client.api-key"/>
+    <appender name="TRUFFLE_ERROR_APPENDER" class="com.wafflestudio.spring.truffle.appender.TruffleAppender">
+        <apiKey>${TRUFFLE_API_KEY}</apiKey>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+    <appender name="TRUFFLE_APPENDER" class="com.wafflestudio.spring.truffle.appender.TruffleAppender">
+        <apiKey>${TRUFFLE_API_KEY}</apiKey>
+    </appender>
+</included>
