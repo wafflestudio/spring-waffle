@@ -4,15 +4,15 @@
 
 ## 사용법
 ### AWS 설정
-#### 로컬 환경설정
 - AWS 콘솔에 로그인
 - 액세스 키 발급
-  - IAM 탭 이동
-  - 사용자(User) 메뉴 선택
-  - 본인 계정(혹은 원하는 사용자)을 클릭.
-  - 보안 자격 증명(Security credentials) 탭 클릭
-  - 새 액세스 키 생성
-  - AWS 에서 주는 aws_access_key_id, aws_secret_access_key 를 저장
+    - IAM 탭 이동
+    - 사용자(User) 메뉴 선택
+    - 본인 계정(혹은 원하는 사용자)을 클릭.
+    - 보안 자격 증명(Security credentials) 탭 클릭
+    - 새 액세스 키 생성
+    - AWS 에서 주는 aws_access_key_id, aws_secret_access_key 를 저장
+#### 로컬 환경설정
 - AWS CLI 설치
 - `aws configure` 을 이용해 aws_access_key_id, aws_secret_access_key 설정 완료
 
@@ -36,7 +36,7 @@
 - `build.gradle.kts` 혹은 `build.gradle` 파일에 아래와 같이 추가
     - build.gradle.kts
       ```kotlin
-      repository {
+      repositories {
         // ...
         maven {
           val authToken = properties["codeArtifactAuthToken"] as String? ?: ProcessBuilder(
@@ -94,8 +94,11 @@
 - [secret-manager](./spring-boot-starter-waffle-secret-manager)
     - secret-names 을 통해 AWS Secret Manager 에서 secret 을 가져오는 라이브러리
     - 활성 property: `secret-names`
-- [truffle-kotlin](./truffle)
+- [truffle](./truffle)
     - 와플스튜디오 slack 채널에 로그를 전송하는 라이브러리
     - 활성 property: `truffle.client.api-key`
 #### 기능별 사용법은 링크 참조
 
+## 사용처 예시
+- [snutt](https://github.com/wafflestudio/snutt)
+- [snutt-ev](https://github.com/wafflestudio/snutt-ev)

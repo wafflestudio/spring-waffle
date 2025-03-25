@@ -14,6 +14,7 @@
         - `{api-key}` 는 slack 트러플 채널(#project-truffle)에서 발급받은 key
 
 #### truffle-kotlin 연동
+- codeartifact 등록 [메인 페이지](../README.md) 참조
 - `build.gradle.kts` 혹은 `build.gradle` 파일에 아래와 같이 추가 (spring-boot-starter-waffle 추가 시 생략 가능)
     - build.gradle.kts
       ```kotlin
@@ -30,7 +31,7 @@
       }
       ```
 
-#### logback customize
+#### logback customize (선택)
 - 기존 설정은 에러 레벨의 root 로그만 트러플로 보내는 구조
 - 추가로 특정 패키지, 특정 레벨의 로그를 트러플로 보내는 설정을 추가하기 위해서는 `logback-spring.xml` 파일에 추가 설정이 필요
 - logback 연동 설정
