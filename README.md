@@ -87,12 +87,13 @@
       // ...
       dependencies {
         // ...
-        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle:1.0.2'
+        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle:1.0.3'
       }
       ```
 ## 기능 목록
 - [secret-manager](./spring-boot-starter-waffle-secret-manager)
     - secret-names 을 통해 AWS Secret Manager 에서 secret 을 가져오는 라이브러리
+    - 애플리케이션 환경에 이미 정의된 프로퍼티는 변경하지 않습니다.
     - 활성 property: `secret-names`
 - [truffle](./truffle)
     - 와플스튜디오 slack 채널에 로그를 전송하는 라이브러리
