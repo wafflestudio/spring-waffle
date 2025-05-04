@@ -18,17 +18,22 @@ class SecretsManagerEnvironmentPostProcessor : EnvironmentPostProcessor {
         environment: ConfigurableEnvironment,
         application: SpringApplication,
     ) {
-        val secretNamesProperty = environment.getProperty("secret-names")
-        if (secretNamesProperty != null) {
-            val secretNames = secretNamesProperty.split(",")
-            val secrets = mutableMapOf<String, Any>()
+        val secretNamesProperty = environment.getProperty("secret-names") ?: return
+        val secretNames = secretNamesProperty.split(",")
+        val secrets = mutableMapOf<String, Any>()
 
-            secretNames.forEach { secretName ->
-                val secretString = getSecretString(secretName)
-                secrets.putAll(objectMapper.readValue(secretString))
-            }
+        secretNames.forEach { secretName ->
+            val secretString = getSecretString(secretName)
+            val parsedSecrets = objectMapper.readValue<Map<String, Any>>(secretString)
+            secrets.putAll(
+                parsedSecrets.filterKeys {
+                    environment.getProperty(it).isNullOrEmpty()
+                },
+            )
+        }
 
-            // Add directly to environment
+        // Add directly to environment
+        if (secrets.isNotEmpty()) {
             environment.propertySources.addFirst(
                 MapPropertySource("aws-secrets", secrets),
             )
