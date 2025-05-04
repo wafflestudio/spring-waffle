@@ -22,13 +22,15 @@
       ```kotlin
       dependencies {
         //...
-        implementation("com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.2")
+        implementation("com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.3")
       }
       ```
     - build.gradle
       ```groovy
       dependencies {
         //...
-        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.2'
+        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.3'
       }
       ```
+#### Note
+- 애플리케이션 환경에 이미 정의된 프로퍼티는 변경하지 않습니다.
