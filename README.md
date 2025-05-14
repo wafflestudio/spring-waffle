@@ -54,7 +54,7 @@
       // ...
       dependencies {
         // ...
-        implementation("com.wafflestudio.spring:spring-boot-starter-waffle:1.0.3")
+        implementation("com.wafflestudio.spring:spring-boot-starter-waffle:1.0.4")
       }
       ```
     - build.gradle
@@ -87,7 +87,7 @@
       // ...
       dependencies {
         // ...
-        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle:1.0.3'
+        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle:1.0.4'
       }
       ```
 ## 기능 목록

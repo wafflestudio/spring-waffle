@@ -9,12 +9,11 @@ import com.wafflestudio.spring.truffle.appender.TruffleAppender
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationPreparedEvent
 import org.springframework.context.ApplicationListener
-import java.io.File
 
 class TruffleApplicationListener : ApplicationListener<ApplicationPreparedEvent> {
     override fun onApplicationEvent(event: ApplicationPreparedEvent) {
-        val logbackConfigFile =
-            File(event.applicationContext.environment.getProperty("logging.config", "logback-spring.xml"))
+        val property = event.applicationContext.environment.getProperty("logging.config", "classpath:logback-spring.xml")
+        val logbackConfigFile = event.applicationContext.getResource(property)
         if (logbackConfigFile.exists()) {
             return
         }
