@@ -20,14 +20,14 @@
       ```kotlin
       dependencies {
         //...
-        implementation("com.wafflestudio.spring.truffle:spring-boot-starter-truffle:1.0.3")
+        implementation("com.wafflestudio.spring.truffle:spring-boot-starter-truffle:1.0.4")
       }
       ```
     - build.gradle
       ```groovy
       dependencies {
         //...
-        implementation 'com.wafflestudio.spring.truffle:spring-boot-starter-truffle:1.0.3'
+        implementation 'com.wafflestudio.spring.truffle:spring-boot-starter-truffle:1.0.4'
       }
       ```
 

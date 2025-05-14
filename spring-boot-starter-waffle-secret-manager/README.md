@@ -22,14 +22,14 @@
       ```kotlin
       dependencies {
         //...
-        implementation("com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.3")
+        implementation("com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.4")
       }
       ```
     - build.gradle
       ```groovy
       dependencies {
         //...
-        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.3'
+        implementation 'com.wafflestudio.spring:spring-boot-starter-waffle-secret-manager:1.0.4'
       }
       ```
 #### Note
