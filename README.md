@@ -2,6 +2,18 @@
 ## 와플스튜디오 스프링 라이브러리
 - 와플스튜디오에서 사용하는 스프링 라이브러리 모음
 
+## 배포된 라이브러리 위치
+- AWS CodeArtifact
+- 리포지토리 URL: `https://wafflestudio-405906814034.d.codeartifact.ap-northeast-1.amazonaws.com/maven/spring-waffle/`
+
+## Compatibility
+- version 2.0.0 ~
+  - JDK 21 이상
+  - spring boot 4.0 이상
+- version 1.0.0 ~ 1.0.4
+  - JDK 17 이상
+  - spring boot 3.x 
+
 ## 사용법
 ### AWS 설정
 - AWS 콘솔에 로그인
