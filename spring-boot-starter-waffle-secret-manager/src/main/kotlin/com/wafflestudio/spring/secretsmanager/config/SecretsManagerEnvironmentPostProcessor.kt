@@ -18,6 +18,10 @@ class SecretsManagerEnvironmentPostProcessor : EnvironmentPostProcessor {
         environment: ConfigurableEnvironment,
         application: SpringApplication,
     ) {
+        val isAotProcessing = environment.getProperty("spring.aot.processing", Boolean::class.java, false)
+        if (isAotProcessing) {
+            return
+        }
         val secretNamesProperty = environment.getProperty("secret-names") ?: return
         val secretNames = secretNamesProperty.split(",")
         val secrets = mutableMapOf<String, Any>()
