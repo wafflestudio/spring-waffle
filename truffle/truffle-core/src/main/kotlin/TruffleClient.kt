@@ -35,20 +35,22 @@ internal class DefaultTruffleClient(
                 }.asCoroutineDispatcher(),
             )
 
-        val connectionManager = PoolingHttpClientConnectionManager().apply {
-            maxTotal = 3
-            defaultMaxPerRoute = 3
-            setDefaultConnectionConfig(
-                ConnectionConfig.custom()
-                    .setSocketTimeout(Timeout.ofSeconds(5))
-                    .setConnectTimeout(Timeout.ofSeconds(5))
-                    .build()
-            )
-        }
+        val connectionManager =
+            PoolingHttpClientConnectionManager().apply {
+                maxTotal = 3
+                defaultMaxPerRoute = 3
+                setDefaultConnectionConfig(
+                    ConnectionConfig.custom()
+                        .setSocketTimeout(Timeout.ofSeconds(5))
+                        .setConnectTimeout(Timeout.ofSeconds(5))
+                        .build(),
+                )
+            }
 
-        val httpClient = HttpClients.custom()
-            .setConnectionManager(connectionManager)
-            .build()
+        val httpClient =
+            HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .build()
 
         val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
