@@ -1,1 +1,1 @@
-org.springframework.boot.env.EnvironmentPostProcessor=com.wafflestudio.spring.secretsmanager.config.SecretsManagerEnvironmentPostProcessor
+org.springframework.boot.EnvironmentPostProcessor=com.wafflestudio.spring.secretsmanager.config.SecretsManagerEnvironmentPostProcessor

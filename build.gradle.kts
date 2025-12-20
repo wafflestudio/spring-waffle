@@ -1,18 +1,19 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Properties
 
 plugins {
-    id("org.springframework.boot") version "3.2.4" apply false
-    id("io.spring.dependency-management") version "1.1.4"
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0"
+    id("org.springframework.boot") version "4.0.1" apply false
+    kotlin("jvm") version "2.2.0"
+    kotlin("plugin.spring") version "2.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
     id("maven-publish")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_21
+java.targetCompatibility = JavaVersion.VERSION_21
 
 allprojects {
     repositories {
@@ -32,13 +33,9 @@ allprojects {
         withJavadocJar()
     }
 
-    dependencyManagement {
-        imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:3.2.4")
-        }
-    }
-
     dependencies {
+        implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+
         implementation(kotlin("stdlib"))
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
@@ -73,9 +70,9 @@ allprojects {
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = "17"
+        compilerOptions {
+            freeCompilerArgs.add("-Xjsr305=strict")
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -84,7 +81,7 @@ allprojects {
     }
 }
 
-task("updateVersion") {
+tasks.register("updateVersion") {
     properties["releaseVersion"]?.let { releaseVersion ->
         val newSnapshotVersion =
             (releaseVersion as String).split(".").let {

@@ -6,10 +6,13 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import org.apache.hc.client5.http.config.ConnectionConfig
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager
+import org.apache.hc.core5.util.Timeout
 import org.slf4j.LoggerFactory
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.web.client.RestClient
-import java.time.Duration
 import java.util.concurrent.Executors
 
 internal interface TruffleClient {
@@ -31,15 +34,27 @@ internal class DefaultTruffleClient(
                     Thread(r, "truffle-client").apply { isDaemon = true }
                 }.asCoroutineDispatcher(),
             )
-        val clientHttpRequestFactory =
-            HttpComponentsClientHttpRequestFactory().apply {
-                setConnectTimeout(Duration.ofSeconds(5))
-                setConnectionRequestTimeout(Duration.ofSeconds(1))
-            }
+
+        val connectionManager = PoolingHttpClientConnectionManager().apply {
+            maxTotal = 3
+            defaultMaxPerRoute = 3
+            setDefaultConnectionConfig(
+                ConnectionConfig.custom()
+                    .setSocketTimeout(Timeout.ofSeconds(5))
+                    .setConnectTimeout(Timeout.ofSeconds(5))
+                    .build()
+            )
+        }
+
+        val httpClient = HttpClients.custom()
+            .setConnectionManager(connectionManager)
+            .build()
+
+        val requestFactory = HttpComponentsClientHttpRequestFactory(httpClient)
 
         val restClient =
             restClientBuilder
-                .requestFactory(clientHttpRequestFactory)
+                .requestFactory(requestFactory)
                 .baseUrl("https://truffle-api.wafflestudio.com")
                 .defaultHeader("x-api-key", apiKey)
                 .build()
