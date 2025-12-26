@@ -2,7 +2,6 @@ package com.wafflestudio.spring.truffle.core
 
 import com.wafflestudio.spring.truffle.core.protocol.TruffleEvent
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -61,17 +60,17 @@ internal class DefaultTruffleClient(
                 .defaultHeader("x-api-key", apiKey)
                 .build()
 
-        coroutineScope.launch(SupervisorJob()) {
-            events.collect {
+        coroutineScope.launch {
+            events.collect { event ->
                 runCatching {
                     restClient
                         .post()
                         .uri("/events")
-                        .body(it)
+                        .body(event)
                         .retrieve()
                         .toBodilessEntity()
-                }.getOrElse {
-                    logger.warn("Failed to request to truffle server", it)
+                }.getOrElse { error ->
+                    logger.warn("Failed to request to truffle server", error)
                 }
             }
         }

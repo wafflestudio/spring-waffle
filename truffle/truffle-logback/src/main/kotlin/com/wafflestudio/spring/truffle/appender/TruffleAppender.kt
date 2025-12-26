@@ -7,6 +7,7 @@ import com.wafflestudio.spring.truffle.core.IHub
 import com.wafflestudio.spring.truffle.core.Truffle
 import com.wafflestudio.spring.truffle.core.protocol.TruffleEvent
 import com.wafflestudio.spring.truffle.core.protocol.TruffleException
+import com.wafflestudio.spring.truffle.core.protocol.TruffleExceptionElement
 import com.wafflestudio.spring.truffle.core.protocol.TruffleLevel
 
 class TruffleAppender : UnsynchronizedAppenderBase<ILoggingEvent>() {
@@ -34,7 +35,7 @@ class TruffleAppender : UnsynchronizedAppenderBase<ILoggingEvent>() {
                 message = eventObject.formattedMessage,
                 elements =
                     eventObject.callerData.map {
-                        TruffleException.Element(
+                        TruffleExceptionElement(
                             className = it.className,
                             methodName = it.methodName,
                             fileName = it.fileName ?: "",
