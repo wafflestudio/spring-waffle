@@ -1,0 +1,52 @@
+{
+  "reflection": [
+    {
+      "type": "com.wafflestudio.spring.truffle.core.protocol.TruffleEvent",
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "allDeclaredFields": true,
+      "allPublicFields": true,
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "queryAllDeclaredMethods": true,
+      "queryAllDeclaredConstructors": true
+    },
+    {
+      "type": "com.wafflestudio.spring.truffle.core.protocol.TruffleRuntime",
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "allDeclaredFields": true,
+      "allPublicFields": true,
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "queryAllDeclaredMethods": true,
+      "queryAllDeclaredConstructors": true
+    },
+    {
+      "type": "com.wafflestudio.spring.truffle.core.protocol.TruffleException",
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "allDeclaredFields": true,
+      "allPublicFields": true,
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "queryAllDeclaredMethods": true,
+      "queryAllDeclaredConstructors": true
+    },
+    {
+      "type": "com.wafflestudio.spring.truffle.core.protocol.TruffleExceptionElement",
+      "allDeclaredConstructors": true,
+      "allPublicConstructors": true,
+      "allDeclaredFields": true,
+      "allPublicFields": true,
+      "allDeclaredMethods": true,
+      "allPublicMethods": true,
+      "queryAllDeclaredMethods": true,
+      "queryAllDeclaredConstructors": true
+    },
+    {
+      "type": "kotlin.Metadata",
+      "allDeclaredMethods": true
+    }
+  ]
+}
