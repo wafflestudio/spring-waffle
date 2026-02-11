@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.oracle.bmc.Region
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider
-import com.oracle.bmc.auth.okeworkloadidentity.OkeWorkloadIdentityAuthenticationDetailsProvider
 import com.oracle.bmc.secrets.SecretsClient
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails
 import com.oracle.bmc.secrets.requests.GetSecretBundleRequest
@@ -59,12 +58,7 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
     }
 
     private fun createAuthProvider(environment: ConfigurableEnvironment): BasicAuthenticationDetailsProvider {
-        val profiles = environment.activeProfiles.toSet()
-        return if (profiles.contains("dev") || profiles.contains("prod")) {
-            OkeWorkloadIdentityAuthenticationDetailsProvider.builder().build()
-        } else {
-            ConfigFileAuthenticationDetailsProvider("DEFAULT")
-        }
+        return ConfigFileAuthenticationDetailsProvider("DEFAULT")
     }
 
     private fun getSecretString(
