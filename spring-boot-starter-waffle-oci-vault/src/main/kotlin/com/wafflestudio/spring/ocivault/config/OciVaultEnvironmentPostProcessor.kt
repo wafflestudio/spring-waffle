@@ -28,9 +28,10 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
         }
         val secretIdsProperty = environment.getProperty("oci-vault-secret-ids") ?: return
         val secretIds = secretIdsProperty.split(",").map { it.trim() }
-        val region = Region.fromRegionId(
-            environment.getProperty("oci.vault.region", "ap-chuncheon-1"),
-        )
+        val region =
+            Region.fromRegionId(
+                environment.getProperty("oci.vault.region", "ap-chuncheon-1"),
+            )
 
         val authProvider = createAuthProvider(environment)
         val client = SecretsClient.builder().region(region).build(authProvider)
@@ -66,10 +67,14 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
         }
     }
 
-    private fun getSecretString(client: SecretsClient, secretId: String): String {
-        val request = GetSecretBundleRequest.builder()
-            .secretId(secretId)
-            .build()
+    private fun getSecretString(
+        client: SecretsClient,
+        secretId: String,
+    ): String {
+        val request =
+            GetSecretBundleRequest.builder()
+                .secretId(secretId)
+                .build()
         val response = client.getSecretBundle(request)
         val content = (response.secretBundle.secretBundleContent as Base64SecretBundleContentDetails).content
         return String(Base64.getDecoder().decode(content))
