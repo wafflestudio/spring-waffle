@@ -12,9 +12,6 @@ plugins {
     id("maven-publish")
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_21
-java.targetCompatibility = JavaVersion.VERSION_21
-
 allprojects {
     repositories {
         mavenCentral()
@@ -29,6 +26,8 @@ allprojects {
     }
 
     java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
         withSourcesJar()
         withJavadocJar()
     }
@@ -48,16 +47,10 @@ allprojects {
     publishing {
         repositories {
             maven {
-                val authToken =
-                    properties["codeArtifactAuthToken"] as String? ?: ProcessBuilder(
-                        "aws", "codeartifact", "get-authorization-token",
-                        "--domain", "wafflestudio", "--domain-owner", "405906814034",
-                        "--query", "authorizationToken", "--region", "ap-northeast-1", "--output", "text",
-                    ).start().inputStream.bufferedReader().readText().trim()
-                url = uri("https://wafflestudio-405906814034.d.codeartifact.ap-northeast-1.amazonaws.com/maven/spring-waffle/")
+                url = uri("https://maven.pkg.github.com/wafflestudio/spring-waffle")
                 credentials {
-                    username = "aws"
-                    password = authToken
+                    username = "wafflestudio"
+                    password = findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN") ?: ""
                 }
             }
         }
