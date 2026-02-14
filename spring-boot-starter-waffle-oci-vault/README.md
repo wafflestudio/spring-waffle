@@ -12,7 +12,7 @@ Auth:
 - `oci.auth.type`: `auto` (default), `instance_principal`, or `config`.
   - `config`: Uses OCI config file credentials.
   - `instance_principal`: Uses Instance Principal (Dynamic Group) credentials.
-  - `auto`: Tries Instance Principal first; if it fails, falls back to config file credentials.
+  - `auto`: Tries config file credentials first; if it fails, falls back to Instance Principal.
 
 Config-file auth options:
 - `oci.config.path`: Path to OCI config file (default: `~/.oci/config`).

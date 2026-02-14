@@ -61,14 +61,14 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
     }
 
     private fun createAuthProvider(environment: ConfigurableEnvironment): BasicAuthenticationDetailsProvider {
-        // Default to `auto` so apps "just work" on OCI (Instance Principals) and locally (config file fallback).
+        // Default to `auto` so apps "just work" locally (config file) and on OCI (Instance Principals fallback).
         return when (val authType = environment.getProperty("oci.auth.type", "auto").trim().lowercase()) {
             "auto" -> {
                 try {
-                    InstancePrincipalsAuthenticationDetailsProvider.builder().build()
-                } catch (e: Exception) {
-                    log.info("OCI instance principal auth failed; falling back to config file auth (oci.auth.type=auto).", e)
                     createConfigAuthProvider(environment)
+                } catch (e: Exception) {
+                    log.info("OCI config file auth failed; falling back to instance principal auth (oci.auth.type=auto).", e)
+                    InstancePrincipalsAuthenticationDetailsProvider.builder().build()
                 }
             }
 
