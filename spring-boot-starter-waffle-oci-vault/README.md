@@ -24,4 +24,4 @@ Each secret is expected to be a JSON object. Keys from the JSON are added as pro
 
 ## Notes
 
-- OKE Workload Identity is an OKE feature and not implemented by this starter at the moment. If you run on OKE Basic and you cannot use instance principals from pods, use `oci.auth.type=config` (or `auto`) with a mounted `~/.oci/config` + key.
+- OKE Workload Identity is an Enhanced cluster feature and not implemented by this starter at the moment.
