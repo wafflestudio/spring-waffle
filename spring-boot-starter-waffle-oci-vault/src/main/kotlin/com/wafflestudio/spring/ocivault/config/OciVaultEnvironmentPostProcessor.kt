@@ -10,10 +10,10 @@ import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider
 import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider
 import com.oracle.bmc.http.ClientConfigurator
 import com.oracle.bmc.http.client.StandardClientProperties
+import com.oracle.bmc.retrier.RetryConfiguration
 import com.oracle.bmc.secrets.SecretsClient
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails
 import com.oracle.bmc.secrets.requests.GetSecretBundleRequest
-import com.oracle.bmc.retrier.RetryConfiguration
 import com.oracle.bmc.waiter.FixedTimeDelayStrategy
 import com.oracle.bmc.waiter.MaxAttemptsTerminationStrategy
 import org.slf4j.LoggerFactory
@@ -129,8 +129,8 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                 InstancePrincipalsAuthenticationDetailsProvider
                     .builder()
                     .federationClientConfigurator(instancePrincipalTimeoutConfigurator)
-                        .detectEndpointRetries(detectEndpointRetries)
-                        .timeoutForEachRetry(timeoutForEachRetryMillis)
+                    .detectEndpointRetries(detectEndpointRetries)
+                    .timeoutForEachRetry(timeoutForEachRetryMillis)
                     .build()
 
             else ->
