@@ -41,7 +41,7 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
         val client = SecretsClient.builder().region(region).build(authProvider)
         val secrets = mutableMapOf<String, Any>()
 
-        try {
+        client.use { client ->
             secretIds.forEach { secretId ->
                 val secretString = getSecretString(client, secretId)
                 val parsedSecrets = objectMapper.readValue<Map<String, Any>>(secretString)
@@ -51,8 +51,6 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                     },
                 )
             }
-        } finally {
-            client.close()
         }
 
         if (secrets.isNotEmpty()) {
@@ -64,8 +62,7 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
 
     private fun createAuthProvider(environment: ConfigurableEnvironment): BasicAuthenticationDetailsProvider {
         // Default to `auto` so apps "just work" on OCI (Instance Principals) and locally (config file fallback).
-        val authType = environment.getProperty("oci.auth.type", "auto").trim().lowercase()
-        return when (authType) {
+        return when (val authType = environment.getProperty("oci.auth.type", "auto").trim().lowercase()) {
             "auto" -> {
                 try {
                     InstancePrincipalsAuthenticationDetailsProvider.builder().build()
