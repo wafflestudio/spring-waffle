@@ -15,6 +15,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.MapPropertySource
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.getProperty
 import java.util.Base64
 
 class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
@@ -25,7 +26,7 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
         environment: ConfigurableEnvironment,
         application: SpringApplication,
     ) {
-        val isAotProcessing = environment.getProperty("spring.aot.processing", Boolean::class.java, false)
+        val isAotProcessing = environment.getProperty<Boolean>("spring.aot.processing", false)
         if (isAotProcessing) {
             return
         }
