@@ -13,6 +13,9 @@ import com.oracle.bmc.http.client.StandardClientProperties
 import com.oracle.bmc.secrets.SecretsClient
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails
 import com.oracle.bmc.secrets.requests.GetSecretBundleRequest
+import com.oracle.bmc.retrier.RetryConfiguration
+import com.oracle.bmc.waiter.FixedTimeDelayStrategy
+import com.oracle.bmc.waiter.MaxAttemptsTerminationStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.boot.EnvironmentPostProcessor
 import org.springframework.boot.SpringApplication
@@ -43,6 +46,14 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                 environment.getProperty("oci.vault.region", "ap-chuncheon-1"),
             )
 
+        val maxAttempts = environment.getProperty<Int>("oci.retry.max-attempts", 2).coerceAtLeast(1)
+        val retryDelayMillis = environment.getProperty<Int>("oci.retry.delay-millis", 0).coerceAtLeast(0).toLong()
+        val retryConfiguration =
+            RetryConfiguration.builder()
+                .terminationStrategy(MaxAttemptsTerminationStrategy(maxAttempts))
+                .delayStrategy(FixedTimeDelayStrategy(retryDelayMillis))
+                .build()
+
         val authProvider = createAuthProvider(environment)
         val client =
             SecretsClient
@@ -52,6 +63,7 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                         .builder()
                         .connectionTimeoutMillis(ociTimeout.toMillis().toInt())
                         .readTimeoutMillis(ociTimeout.toMillis().toInt())
+                        .retryConfiguration(retryConfiguration)
                         .build(),
                 )
                 .region(region)
@@ -84,7 +96,10 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                 builder.property(StandardClientProperties.READ_TIMEOUT, ociTimeout)
             }
 
-        // Default to `auto` so apps "just work" locally (config file) and on OCI (Instance Principals fallback).
+        val timeoutForEachRetryMillis =
+            environment.getProperty<Int>("oci.auth.timeout-for-each-retry-millis", ociTimeout.toMillis().toInt())
+        val detectEndpointRetries = environment.getProperty<Int>("oci.auth.detect-endpoint-retries", 1)
+
         return when (val authType = environment.getProperty("oci.auth.type", "auto").trim().lowercase()) {
             "auto" -> {
                 try {
@@ -94,7 +109,8 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                     InstancePrincipalsAuthenticationDetailsProvider
                         .builder()
                         .federationClientConfigurator(instancePrincipalTimeoutConfigurator)
-                        .timeoutForEachRetry(ociTimeout.toMillis().toInt())
+                        .detectEndpointRetries(detectEndpointRetries)
+                        .timeoutForEachRetry(timeoutForEachRetryMillis)
                         .build()
                 }
             }
@@ -113,7 +129,8 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                 InstancePrincipalsAuthenticationDetailsProvider
                     .builder()
                     .federationClientConfigurator(instancePrincipalTimeoutConfigurator)
-                    .timeoutForEachRetry(ociTimeout.toMillis().toInt())
+                        .detectEndpointRetries(detectEndpointRetries)
+                        .timeoutForEachRetry(timeoutForEachRetryMillis)
                     .build()
 
             else ->
