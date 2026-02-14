@@ -2,25 +2,31 @@ package com.wafflestudio.spring.ocivault.config
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.oracle.bmc.ClientConfiguration
 import com.oracle.bmc.ConfigFileReader
 import com.oracle.bmc.Region
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider
 import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider
 import com.oracle.bmc.auth.InstancePrincipalsAuthenticationDetailsProvider
+import com.oracle.bmc.http.ClientConfigurator
+import com.oracle.bmc.http.client.StandardClientProperties
 import com.oracle.bmc.secrets.SecretsClient
 import com.oracle.bmc.secrets.model.Base64SecretBundleContentDetails
 import com.oracle.bmc.secrets.requests.GetSecretBundleRequest
+import org.slf4j.LoggerFactory
 import org.springframework.boot.EnvironmentPostProcessor
 import org.springframework.boot.SpringApplication
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.MapPropertySource
-import org.slf4j.LoggerFactory
 import org.springframework.core.env.getProperty
+import java.time.Duration
 import java.util.Base64
 
 class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
     private val log = LoggerFactory.getLogger(javaClass)
     private val objectMapper = jacksonObjectMapper()
+
+    private val ociTimeout: Duration = Duration.ofSeconds(10)
 
     override fun postProcessEnvironment(
         environment: ConfigurableEnvironment,
@@ -38,7 +44,18 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
             )
 
         val authProvider = createAuthProvider(environment)
-        val client = SecretsClient.builder().region(region).build(authProvider)
+        val client =
+            SecretsClient
+                .builder()
+                .configuration(
+                    ClientConfiguration
+                        .builder()
+                        .connectionTimeoutMillis(ociTimeout.toMillis().toInt())
+                        .readTimeoutMillis(ociTimeout.toMillis().toInt())
+                        .build(),
+                )
+                .region(region)
+                .build(authProvider)
         val secrets = mutableMapOf<String, Any>()
 
         client.use { client ->
@@ -61,6 +78,12 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
     }
 
     private fun createAuthProvider(environment: ConfigurableEnvironment): BasicAuthenticationDetailsProvider {
+        val instancePrincipalTimeoutConfigurator =
+            ClientConfigurator { builder ->
+                builder.property(StandardClientProperties.CONNECT_TIMEOUT, ociTimeout)
+                builder.property(StandardClientProperties.READ_TIMEOUT, ociTimeout)
+            }
+
         // Default to `auto` so apps "just work" locally (config file) and on OCI (Instance Principals fallback).
         return when (val authType = environment.getProperty("oci.auth.type", "auto").trim().lowercase()) {
             "auto" -> {
@@ -68,7 +91,11 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
                     createConfigAuthProvider(environment)
                 } catch (e: Exception) {
                     log.info("OCI config file auth failed; falling back to instance principal auth (oci.auth.type=auto).", e)
-                    InstancePrincipalsAuthenticationDetailsProvider.builder().build()
+                    InstancePrincipalsAuthenticationDetailsProvider
+                        .builder()
+                        .federationClientConfigurator(instancePrincipalTimeoutConfigurator)
+                        .timeoutForEachRetry(ociTimeout.toMillis().toInt())
+                        .build()
                 }
             }
 
@@ -82,7 +109,12 @@ class OciVaultEnvironmentPostProcessor : EnvironmentPostProcessor {
             "instanceprincipal",
             "instance-principal",
             "ip",
-            -> InstancePrincipalsAuthenticationDetailsProvider.builder().build()
+            ->
+                InstancePrincipalsAuthenticationDetailsProvider
+                    .builder()
+                    .federationClientConfigurator(instancePrincipalTimeoutConfigurator)
+                    .timeoutForEachRetry(ociTimeout.toMillis().toInt())
+                    .build()
 
             else ->
                 throw IllegalArgumentException(
