@@ -5,7 +5,7 @@ import java.io.FileOutputStream
 import java.util.Properties
 
 plugins {
-    id("org.springframework.boot") version "4.0.1" apply false
+    id("org.springframework.boot") version "3.5.11" apply false
     kotlin("jvm") version "2.2.0"
     kotlin("plugin.spring") version "2.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "12.2.0"
@@ -26,8 +26,8 @@ allprojects {
     }
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         withSourcesJar()
         withJavadocJar()
     }
@@ -65,7 +65,7 @@ allprojects {
     tasks.withType<KotlinCompile> {
         compilerOptions {
             freeCompilerArgs.add("-Xjsr305=strict")
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 

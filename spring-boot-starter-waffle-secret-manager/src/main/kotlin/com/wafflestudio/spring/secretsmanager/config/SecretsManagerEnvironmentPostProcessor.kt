@@ -2,8 +2,8 @@ package com.wafflestudio.spring.secretsmanager.config
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.springframework.boot.EnvironmentPostProcessor
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.env.EnvironmentPostProcessor
 import org.springframework.core.env.ConfigurableEnvironment
 import org.springframework.core.env.MapPropertySource
 import software.amazon.awssdk.regions.Region
